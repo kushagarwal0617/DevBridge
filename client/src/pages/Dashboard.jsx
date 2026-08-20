@@ -162,27 +162,26 @@ function Dashboard() {
       title={`Welcome back, ${user.name.split(' ')[0]}`}
       subtitle="Here's what's happening across your projects."
     >
-      {/* Hero banner */}
-      <div className="relative rounded-2xl overflow-hidden mb-8 h-48 md:h-56">
-        <img
-          src="https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&w=1600&q=60"
-          alt=""
-          className="absolute inset-0 w-full h-full object-cover"
-        />
+     {/* Hero banner */}
+<div className="relative rounded-2xl overflow-hidden mb-8 h-48 md:h-56">
+  <img
+    src="https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&w=1600&q=60"
+    alt=""
+    className="absolute inset-0 w-full h-full object-cover"
+  />
 
-        <div className="absolute inset-0 bg-gradient-to-r from-gray-950/90 via-gray-950/70 to-brand-900/40" />
+  <div className="absolute inset-0 bg-gradient-to-r from-gray-950/95 via-gray-950/80 to-brand-900/60" />
 
-        <div className="relative h-full flex flex-col justify-center px-8">
-          <p className="text-brand-300 text-sm font-medium mb-1">
-            DevBridge
-          </p>
+  <div className="relative h-full flex flex-col justify-center px-8">
+    <p className="text-white text-sm font-semibold mb-1 drop-shadow-md">
+      DevBridge
+    </p>
 
-          <h2 className="text-white text-2xl md:text-3xl font-bold max-w-lg leading-tight">
-            Build, chat, and ship with your team — and AI — in one
-            place.
-          </h2>
-        </div>
-      </div>
+    <h2 className="text-white text-2xl md:text-3xl font-bold max-w-lg leading-tight drop-shadow-md">
+      Build, chat, and ship with your team — and AI — in one place.
+    </h2>
+  </div>
+</div>
 
       {/* Statistics */}
       <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 mb-8">
