@@ -96,17 +96,19 @@ function ProjectWorkspace() {
     chatEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages]);
 
-  const handleCreateTask = async (e) => {
-    e.preventDefault();
-    if (!newTaskTitle.trim()) return;
-    try {
-      const res = await api.post(`/projects/${id}/tasks`, { title: newTaskTitle });
-      setTasks([res.data, ...tasks]);
-      setNewTaskTitle('');
-    } catch (err) {
-      setError(err.response?.data?.message || 'Could not create task');
-    }
-  };
+ const handleCreateTask = async (e) => {
+  e.preventDefault();
+  if (!newTaskTitle.trim()) return;
+  try {
+    const res = await api.post(`/projects/${id}/tasks`, { title: newTaskTitle });
+    setTasks([res.data, ...tasks]);
+    setNewTaskTitle('');
+    const analyticsRes = await api.get(`/analytics/${id}`);
+    setAnalytics(analyticsRes.data);
+  } catch (err) {
+    setError(err.response?.data?.message || 'Could not create task');
+  }
+};
 
   const handleStatusChange = async (taskId, newStatus) => {
     try {
@@ -120,13 +122,16 @@ function ProjectWorkspace() {
   };
 
   const handleDeleteTask = async (taskId) => {
-    try {
-      await api.delete(`/tasks/${taskId}`);
-      setTasks(tasks.filter((t) => t._id !== taskId));
-    } catch (err) {
-      setError(err.response?.data?.message || 'Could not delete task');
-    }
-  };
+  try {
+    await api.delete(`/tasks/${taskId}`);
+    setTasks(tasks.filter((t) => t._id !== taskId));
+    const analyticsRes = await api.get(`/analytics/${id}`);
+    setAnalytics(analyticsRes.data);
+  } catch (err) {
+    setFileError; // (leave your existing error handling as-is)
+    setError(err.response?.data?.message || 'Could not delete task');
+  }
+};
 
   const handleInvite = async (e) => {
     e.preventDefault();
