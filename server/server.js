@@ -20,16 +20,22 @@ const initSocket = require('./sockets/chatSocket');
 const app = express();
 const server = http.createServer(app); // the raw HTTP server, shared by Express AND Socket.IO
 
+// Allow both your local frontend and your deployed frontend
+const allowedOrigins = [
+  'http://localhost:5173',
+  process.env.CLIENT_URL,
+].filter(Boolean);
+
 const io = new Server(server, {
   cors: {
-    origin: '*', // during development, allow any frontend origin
+    origin: allowedOrigins,
     methods: ['GET', 'POST'],
   },
 });
 
 connectDB();
 
-app.use(cors());
+app.use(cors({ origin: allowedOrigins }));
 app.use(express.json());
 
 app.get('/', (req, res) => {
