@@ -5,6 +5,14 @@
 Built as a mini-project for the Bachelor of Technology (CSE) program at Pranveer Singh Institute of Technology.
 
 ---
+## Live Demo
+
+- **App:** https://dev-bridge-two.vercel.app
+- **API:** https://devbridge-api-sxym.onrender.com
+
+> Note: the backend is hosted on Render's free tier, which spins down after periods of inactivity. The first request after idle time may take 30–50 seconds to respond while the server wakes up.
+
+---
 
 ## Why DevBridge
 
