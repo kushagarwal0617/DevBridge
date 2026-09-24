@@ -17,36 +17,33 @@ function Dashboard() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const [userRes, projectsRes, invitationsRes, recRes] =
-          await Promise.all([
-            api.get('/auth/me'),
-            api.get('/projects'),
-            api.get('/invitations/my'),
-            api.get('/recommendations'),
-          ]);
+  const fetchData = async () => {
+    try {
+      // Get the user first — this is the only thing the page absolutely needs to render at all
+      const userRes = await api.get('/auth/me');
+      setUser(userRes.data);
+      setInterestsInput((userRes.data.interests || []).join(', '));
 
-        setUser(userRes.data);
-        setProjects(projectsRes.data);
-        setInvitations(invitationsRes.data);
-        setRecommendations(recRes.data.resources || []);
-        setInterestsInput(
-          (userRes.data.interests || []).join(', ')
-        );
-      } catch (err) {
-        setError('Session expired, please log in again');
-        localStorage.removeItem('token');
+      // Fire the rest independently — each fills in as soon as it's ready, without blocking the others
+      api.get('/projects')
+        .then((res) => setProjects(res.data))
+        .catch(() => setError('Could not load projects'));
 
-        setTimeout(() => {
-          navigate('/login');
-        }, 1500);
-      }
-    };
+      api.get('/invitations/my')
+        .then((res) => setInvitations(res.data))
+        .catch(() => setError('Could not load invitations'));
 
-    fetchData();
-  }, [navigate]);
-
+      api.get('/recommendations')
+        .then((res) => setRecommendations(res.data.resources || []))
+        .catch(() => setError('Could not load recommendations'));
+    } catch (err) {
+      setError('Session expired, please log in again');
+      localStorage.removeItem('token');
+      setTimeout(() => navigate('/login'), 1500);
+    }
+  };
+  fetchData();
+}, [navigate]);
   const handleCreateProject = async (e) => {
     e.preventDefault();
 
