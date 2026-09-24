@@ -6,6 +6,7 @@ function Login() {
   const [formData, setFormData] = useState({ email: '', password: '' });
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+  const [googleLoading, setGoogleLoading] = useState(false);
   const navigate = useNavigate();
   const googleButtonRef = useRef(null);
 
@@ -28,16 +29,22 @@ function Login() {
     }
   };
 
-  const handleGoogleResponse = async (response) => {
-    setError('');
-    try {
-      const res = await api.post('/auth/google', { credential: response.credential });
-      localStorage.setItem('token', res.data.token);
-      navigate('/dashboard');
-    } catch (err) {
-      setError('Google sign-in failed');
-    }
-  };
+const handleGoogleResponse = async (response) => {
+  setError('');
+  setGoogleLoading(true);
+
+  try {
+    const res = await api.post('/auth/google', {
+      credential: response.credential,
+    });
+
+    localStorage.setItem('token', res.data.token);
+    navigate('/dashboard');
+  } catch (err) {
+    setError('Google sign-in failed');
+    setGoogleLoading(false);
+  }
+};
 
   useEffect(() => {
     if (window.google && googleButtonRef.current) {
@@ -126,6 +133,14 @@ function Login() {
           </Link>
         </p>
       </div>
+   {googleLoading && (
+  <div className="fixed inset-0 bg-gray-950/60 backdrop-blur-sm flex items-center justify-center z-50">
+    <div className="bg-white dark:bg-gray-900 rounded-xl px-6 py-4 flex items-center gap-3">
+      <div className="w-5 h-5 border-2 border-brand-600 border-t-transparent rounded-full animate-spin" />
+      <span className="text-gray-700 dark:text-gray-200 text-sm">Signing you in...</span>
+    </div>
+  </div>
+)}
     </div>
   );
 }
